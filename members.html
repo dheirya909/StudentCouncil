@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Members · BBPS GRH Student Council</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0d1b2a;
+      --navy-mid: #162032;
+      --navy-light: #1e3048;
+      --beige: #f5ede0;
+      --beige-warm: #ede0cc;
+      --beige-deep: #d6c4ad;
+      --gold: #c9a96e;
+      --gold-light: #e3c99a;
+      --white: #faf8f5;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--navy);
+      color: var(--beige);
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 64px;
+      background: rgba(13,27,42,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,169,110,0.08);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 48px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--beige);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.3s, color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--gold-light); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 160px 64px 100px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 100%);
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,169,110,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,169,110,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .page-header::after {
+      content: '';
+      position: absolute;
+      right: -100px; top: -100px;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 60%);
+    }
+
+    .page-header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+    }
+
+    .page-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .page-eyebrow::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--gold);
+    }
+
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+
+    .page-title em { font-style: italic; color: var(--gold-light); }
+
+    .page-desc {
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.9;
+      color: rgba(245,237,224,0.55);
+      max-width: 480px;
+    }
+
+    /* GOLD DIVIDER */
+    .gold-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: 0.2;
+      margin: 0 64px;
+    }
+
+    /* EXECUTIVE SECTION */
+    .section-executive {
+      padding: 100px 64px;
+      background: var(--navy);
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 72px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 40px; height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+
+    /* HEAD BOY / HEAD GIRL — featured */
+    .leaders-featured {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .leader-card {
+      background: var(--navy-mid);
+      border: 1px solid rgba(201,169,110,0.1);
+      padding: 52px 48px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.4s, transform 0.4s;
+      cursor: default;
+    }
+
+    .leader-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 70%);
+      transition: opacity 0.4s;
+    }
+
+    .leader-card:hover {
+      border-color: rgba(201,169,110,0.3);
+      transform: translateY(-4px);
+    }
+
+    .leader-card.gold-accent {
+      border-top: 2px solid var(--gold);
+    }
+
+    .leader-role {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .leader-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .leader-class {
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: rgba(245,237,224,0.4);
+      letter-spacing: 0.08em;
+      margin-bottom: 24px;
+    }
+
+    .leader-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: rgba(245,237,224,0.55);
+      line-height: 1.7;
+      border-left: 1px solid rgba(201,169,110,0.25);
+      padding-left: 16px;
+    }
+
+    /* DEPUTIES — 2 col */
+    .leaders-deputies {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .deputy-card {
+      background: rgba(22,32,50,0.6);
+      border: 1px solid rgba(201,169,110,0.07);
+      padding: 40px 44px;
+      position: relative;
+      transition: border-color 0.4s, background 0.4s;
+    }
+
+    .deputy-card:hover {
+      border-color: rgba(201,169,110,0.2);
+      background: rgba(22,32,50,0.9);
+    }
+
+    .deputy-role {
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .deputy-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .deputy-class {
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: rgba(245,237,224,0.35);
+      letter-spacing: 0.06em;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 56px 64px;
+      background: #080f18;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(201,169,110,0.1);
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: rgba(245,237,224,0.25);
+    }
+
+    /* ANIMATIONS */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    @media (max-width: 900px) {
+      nav { padding: 20px 28px; }
+      .page-header { padding: 120px 28px 60px; }
+      .section-executive, .section-prefects, .section-houses { padding: 60px 28px; }
+      .leaders-featured, .leaders-deputies { grid-template-columns: 1fr; }
+      .houses-grid { grid-template-columns: 1fr 1fr; }
+      footer { padding: 40px 28px; flex-direction: column; gap: 16px; text-align: center; }
+      .gold-divider { margin: 0 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">BBPS GRH</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="members.html" class="active">Members</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-inner">
+      <p class="page-eyebrow">Student Council 2025–26</p>
+      <h1 class="page-title">The <em>Council</em><br>Members</h1>
+      <p class="page-desc">
+        Meet the elected representatives who lead, serve, and inspire
+        the student body of BBPS Greater Rohini — each chosen for their
+        character, commitment, and vision.
+      </p>
+    </div>
+  </div>
+
+  <div class="gold-divider"></div>
+
+  <!-- EXECUTIVE BODY -->
+  <section class="section-executive">
+    <div class="section-label">Executive Body</div>
+
+    <!-- Head Boy & Head Girl -->
+    <div class="leaders-featured">
+      <div class="leader-card gold-accent reveal">
+        <div class="leader-role">Head Boy</div>
+        <h2 class="leader-name">Arjun Mehta</h2>
+        <p class="leader-class">Class XII · Science</p>
+        <p class="leader-quote">"Leadership is not about being in charge. It is about taking care of those in your charge."</p>
+      </div>
+      <div class="leader-card gold-accent reveal reveal-delay-1">
+        <div class="leader-role">Head Girl</div>
+        <h2 class="leader-name">Priya Sharma</h2>
+        <p class="leader-class">Class XII · Commerce</p>
+        <p class="leader-quote">"Every voice in our school matters — my role is to ensure each one is heard."</p>
+      </div>
+    </div>
+
+    <!-- Deputies -->
+    <div class="leaders-deputies">
+      <div class="deputy-card reveal">
+        <div class="deputy-role">Deputy Head Boy</div>
+        <h2 class="deputy-name">Rohan Gupta</h2>
+        <p class="deputy-class">Class XII · Science</p>
+      </div>
+      <div class="deputy-card reveal reveal-delay-1">
+        <div class="deputy-role">Deputy Head Girl</div>
+        <h2 class="deputy-name">Ananya Singh</h2>
+        <p class="deputy-class">Class XII · Humanities</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-divider"></div>
+
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">BBPS GRH · Student Council</div>
+    <div class="footer-text">Bal Bharati Public School, Greater Rohini · New Delhi</div>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

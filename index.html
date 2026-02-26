@@ -1,1217 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBPS MUN 2025 - Confluence</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --navy: #001f3f;
-            --light-navy: #003d7a;
-            --white: #ffffff;
-            --light-blue: #e8f4f8;
-            --accent: #4a90e2;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--navy) 0%, var(--light-navy) 100%);
-            color: var(--white);
-            overflow-x: hidden;
-        }
-
-        .bg-pattern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.03;
-            background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 2px, var(--white) 2px, var(--white) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, var(--white) 2px, var(--white) 4px);
-            animation: patternMove 20s linear infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes patternMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
-        }
-
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(0, 31, 63, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            z-index: 1000;
-            border-bottom: 2px solid var(--accent);
-        }
-
-        .nav-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .logo::before {
-            content: '🌐';
-            font-size: 2rem;
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--white);
-            text-decoration: none;
-            transition: color 0.3s;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .hero {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            max-width: 900px;
-            padding: 2rem;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 0.5rem;
-            animation: fadeInUp 1s ease-out;
-            text-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
-        }
-
-        .hero .subtitle {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            animation: fadeInUp 1s ease-out 0.2s backwards;
-            color: var(--accent);
-        }
-
-        .hero .theme {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            animation: fadeInUp 1s ease-out 0.4s backwards;
-            font-style: italic;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        #globe-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.3;
-        }
-
-        .stats-container {
-            position: relative;
-            padding: 5rem 2rem;
-            background: rgba(0, 61, 122, 0.3);
-        }
-
-        .stats-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(0, 31, 63, 0.3) 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 1px solid rgba(74, 144, 226, 0.3);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(74, 144, 226, 0.1), transparent);
-            animation: hologram 3s linear infinite;
-        }
-
-        @keyframes hologram {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .stat-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(74, 144, 226, 0.3);
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: bold;
-            color: var(--accent);
-            position: relative;
-            z-index: 1;
-        }
-
-        .stat-label {
-            font-size: 1.2rem;
-            margin-top: 0.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .committee-section {
-            padding: 5rem 2rem;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background: var(--accent);
-        }
-
-        .committee-cards {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .committee-card {
-            background: linear-gradient(135deg, var(--navy), var(--light-navy));
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid var(--accent);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-
-        .committee-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .committee-card:hover::before {
-            left: 100%;
-        }
-
-        .committee-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .committee-title {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-
-        .committee-agenda {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .executive-board {
-            padding: 5rem 2rem;
-            background: rgba(0, 31, 63, 0.4);
-        }
-
-        .board-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .board-card {
-            background: rgba(74, 144, 226, 0.1);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid var(--accent);
-            transition: all 0.3s;
-        }
-
-        .board-card:hover {
-            background: rgba(74, 144, 226, 0.2);
-            transform: translateX(10px);
-        }
-
-        .board-committee {
-            font-size: 0.9rem;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-
-        .board-position {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 0.3rem;
-        }
-
-        .board-name {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .awards-section {
-            padding: 5rem 2rem;
-        }
-
-        .awards-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .award-committee {
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(0, 31, 63, 0.4));
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid var(--accent);
-        }
-
-        .award-committee h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--accent);
-            text-align: center;
-        }
-
-        .award-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-
-        .award-item:hover {
-            background: rgba(74, 144, 226, 0.2);
-        }
-
-        .award-category {
-            font-weight: bold;
-            color: var(--accent);
-        }
-
-        .timeline-section {
-            padding: 5rem 2rem;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .timeline {
-            max-width: 1000px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 100%;
-            background: var(--accent);
-        }
-
-        .timeline-item {
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .timeline-item:nth-child(odd) .timeline-content {
-            margin-left: auto;
-            text-align: left;
-        }
-
-        .timeline-content {
-            background: rgba(74, 144, 226, 0.1);
-            padding: 1.5rem;
-            border-radius: 10px;
-            width: 45%;
-            border: 1px solid var(--accent);
-            position: relative;
-        }
-
-        .timeline-dot {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
-            background: var(--accent);
-            border-radius: 50%;
-            border: 4px solid var(--navy);
-            animation: dotPulse 2s infinite;
-        }
-
-        @keyframes dotPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.7); }
-            50% { box-shadow: 0 0 0 10px rgba(74, 144, 226, 0); }
-        }
-
-        .secretariat-section {
-            padding: 5rem 2rem;
-            background: rgba(0, 61, 122, 0.3);
-        }
-
-        .secretariat-grid {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .secretariat-card {
-            background: rgba(74, 144, 226, 0.1);
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid rgba(74, 144, 226, 0.3);
-            transition: all 0.3s;
-        }
-
-        .secretariat-card:hover {
-            background: rgba(74, 144, 226, 0.2);
-            transform: scale(1.05);
-        }
-
-        .interactive-section {
-            padding: 5rem 2rem;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .interactive-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .interactive-card {
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(0, 31, 63, 0.4));
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid var(--accent);
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .interactive-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .interactive-card h3 {
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        .interactive-card p {
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        #quiz-container, #builder-container, #badge-container, #simulator-container {
-            margin-top: 2rem;
-            text-align: left;
-        }
-
-        #quiz-container div, #builder-container div {
-            margin-bottom: 1rem;
-        }
-
-        #options button {
-            display: block;
-            width: 100%;
-            padding: 0.5rem;
-            margin: 0.5rem 0;
-            background: rgba(74, 144, 226, 0.2);
-            border: 1px solid var(--accent);
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        #options button:hover {
-            background: var(--accent);
-        }
-
-        #builder-container textarea, #builder-container input {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--accent);
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--white);
-        }
-
-        #badge-container select, #badge-container input {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--accent);
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--white);
-        }
-
-        #resolution-output, #debate-output {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            border-radius: 5px;
-            margin-top: 1rem;
-            white-space: pre-wrap;
-        }
-
-        footer {
-            background: var(--navy);
-            padding: 3rem 2rem;
-            text-align: center;
-            border-top: 2px solid var(--accent);
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: var(--accent);
-            color: var(--white);
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            transition: all 0.3s;
-            margin: 1rem;
-        }
-
-        .cta-button:hover {
-            background: var(--white);
-            color: var(--navy);
-            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.5);
-        }
-
-        .quote-section {
-            padding: 4rem 2rem;
-            background: rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-
-        .quote-box {
-            max-width: 800px;
-            margin: 0 auto;
-            font-size: 1.5rem;
-            font-style: italic;
-            line-height: 1.8;
-            position: relative;
-        }
-
-        .quote-box::before {
-            content: '"';
-            font-size: 4rem;
-            position: absolute;
-            left: -30px;
-            top: -20px;
-            color: var(--accent);
-        }
-
-        .quote-author {
-            margin-top: 1rem;
-            font-size: 1.2rem;
-            color: var(--accent);
-            font-style: normal;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .hero .subtitle { font-size: 1.5rem; }
-            .nav-links { flex-direction: column; gap: 1rem; }
-            .timeline-content { width: 80%; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BBPS GRH Student Council</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0d1b2a;
+      --navy-mid: #162032;
+      --navy-light: #1e3048;
+      --beige: #f5ede0;
+      --beige-deep: #d6c4ad;
+      --gold: #c9a96e;
+      --gold-light: #e3c99a;
+      --white: #faf8f5;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--navy);
+      color: var(--beige);
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 64px;
+      background: linear-gradient(to bottom, rgba(13,27,42,0.95) 0%, transparent 100%);
+      backdrop-filter: blur(2px);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 48px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--beige);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.3s, color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover { opacity: 1; color: var(--gold-light); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 64px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(201,169,110,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 70% at 10% 80%, rgba(30,48,72,0.8) 0%, transparent 60%),
+        linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 50%, #0a1520 100%);
+      z-index: 0;
+    }
+
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,169,110,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,169,110,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 7vw, 6.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.35s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3vw, 2.8rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--beige-deep);
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(245,237,224,0.65);
+      max-width: 520px;
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.65s forwards;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.8s forwards;
+    }
+
+    .btn-primary {
+      padding: 16px 40px;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    .hero-line {
+      position: absolute;
+      right: 64px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 220px;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+      opacity: 0.4;
+      z-index: 1;
+    }
+
+    /* QUOTE */
+    .section-vision {
+      padding: 140px 64px;
+      background: var(--navy-light);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-vision::before {
+      content: '"';
+      position: absolute;
+      top: -40px; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30rem;
+      font-weight: 300;
+      color: rgba(201,169,110,0.03);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .vision-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--beige);
+      max-width: 820px;
+      margin: 0 auto 32px;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .vision-quote.visible { opacity: 1; transform: translateY(0); }
+
+    .vision-attr {
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      transition: opacity 0.9s ease 0.3s;
+    }
+
+    .vision-attr.visible { opacity: 1; }
+
+    /* FOOTER */
+    footer {
+      padding: 56px 64px;
+      background: #080f18;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(201,169,110,0.1);
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: rgba(245,237,224,0.25);
+    }
+
+    .footer-ig {
+      color: rgba(245,237,224,0.35);
+      transition: color 0.3s, transform 0.3s;
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-ig:hover {
+      color: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 900px) {
+      nav { padding: 20px 28px; }
+      .hero { padding: 100px 28px 60px; }
+      .section-vision { padding: 80px 28px; }
+      footer { padding: 40px 28px; flex-direction: column; gap: 16px; text-align: center; }
+      .hero-line { display: none; }
+    }
+  </style>
 </head>
 <body>
-    <div class="bg-pattern"></div>
 
-    <nav>
-        <div class="nav-content">
-            <div class="logo">BBPS MUN 2025</div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#stats">Highlights</a></li>
-                <li><a href="#committees">Committees</a></li>
-                <li><a href="#board">Executive Board</a></li>
-                <li><a href="#awards">Awards</a></li>
-                <li><a href="#secretariat">Secretariat</a></li>
-                <li><a href="#interactive">Interactive Hub</a></li>
-            </ul>
-        </div>
-    </nav>
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">BBPS GRH</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="members.html">Members</a></li>
+    </ul>
+  </nav>
 
-    <section class="hero" id="home">
-        <canvas id="globe-canvas"></canvas>
-        <div class="hero-content">
-            <h1>BBPS MUN 2025</h1>
-            <div class="subtitle">Confluence</div>
-            <div class="theme">"Voices of Today, Policies for Tomorrow"</div>
-            <p>8th & 9th October 2024 | 15th Edition</p>
-        </div>
-    </section>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Bal Bharati Public School · GRH Marg</p>
+      <h1 class="hero-title">Student<br><em>Council</em></h1>
+      <p class="hero-subtitle">2025 – 2026</p>
+      <p class="hero-desc">
+        A body of dedicated student leaders elected to represent, inspire, and serve
+        the school community — building bridges between students and staff while
+        cultivating excellence in all we do.
+      </p>
+      <div class="hero-buttons">
+        <a class="btn-primary" href="members.html">Meet the Council</a>
+      </div>
+    </div>
+    <div class="hero-line"></div>
+  </section>
 
-    <section class="quote-section">
-        <div class="quote-box">
-            We may have different religions, different languages, different colored skin, but we all belong to one human race.
-            <div class="quote-author">— Kofi Annan</div>
-        </div>
-    </section>
+  <!-- QUOTE -->
+  <section class="section-vision">
+    <p class="vision-quote">
+      "To cultivate compassionate leaders who are equipped to navigate the world
+      with wisdom, empathy, and an unwavering commitment to service."
+    </p>
+    <p class="vision-attr">— Our Mission</p>
+  </section>
 
-    <section class="stats-container" id="stats">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" data-target="150">0</div>
-                <div class="stat-label">Delegates</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" data-target="4">0</div>
-                <div class="stat-label">Committees</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" data-target="15">0</div>
-                <div class="stat-label">Edition</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" data-target="2">0</div>
-                <div class="stat-label">Days</div>
-            </div>
-        </div>
-    </section>
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">BBPS GRH · Student Council</div>
+    <div class="footer-text">Bal Bharati Public School, GRH Marg · New Delhi</div>
+    <a href="https://www.instagram.com/studentcouncil.bbpsgr/" target="_blank" class="footer-ig" aria-label="Instagram">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+  </footer>
 
-    <section class="committee-section" id="committees">
-        <h2 class="section-title">Committees</h2>
-        <div class="committee-cards">
-            <div class="committee-card">
-                <h3 class="committee-title">UNGA-DISEC</h3>
-                <p class="committee-agenda"><strong>Agenda:</strong> Addressing Weaponisation of AI and Ensuring Ethical Use of Emerging Technologies in Warfare</p>
-                <p>The committee witnessed engaging debates on accountability in AI-enabled weapon systems, preventing misuse of autonomous technologies, and promoting frameworks for responsible innovation in defense sectors.</p>
-            </div>
-            <div class="committee-card">
-                <h3 class="committee-title">UNHRC</h3>
-                <p class="committee-agenda"><strong>Agenda:</strong> Protecting Human Rights and Accountability of States for Human Rights Abuses Against Minority & Indigenous Communities</p>
-                <p>Passionate discussions addressed systemic discrimination, marginalization, and state-led violations with solutions rooted in justice, equality, and international cooperation.</p>
-            </div>
-            <div class="committee-card">
-                <h3 class="committee-title">LOK SABHA</h3>
-                <p class="committee-agenda"><strong>Agenda:</strong> Formulation and Implementation of a Uniform Civil Code with Constitutional Compliance</p>
-                <p>Dynamic discussions on balancing uniformity in personal laws with respect for religious and cultural diversity, emphasizing gender equality and minority rights.</p>
-            </div>
-            <div class="committee-card">
-                <h3 class="committee-title">INTERNATIONAL PRESS</h3>
-                <p class="committee-agenda">Documenting proceedings, conducting interviews, and producing press releases with professionalism and creativity</p>
-                <p>Journalists, photographers, and caricaturists captured the spirit of debate and diplomacy throughout the conference.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="executive-board" id="board">
-        <h2 class="section-title">Executive Board</h2>
-        <div class="board-grid">
-            <div class="board-card">
-                <div class="board-committee">UNGA-DISEC</div>
-                <div class="board-position">Chairperson</div>
-                <div class="board-name">Srijan Sharma</div>
-            </div>
-            <div class="board-card">
-                <div class="board-committee">UNGA-DISEC</div>
-                <div class="board-position">Vice Chairperson</div>
-                <div class="board-name">Chetna Sabharwal</div>
-            </div>
-            <div class="board-card">
-                <div class="board-committee">UNGA-DISEC</div>
-                <div class="board-position">Rapporteur</div>
-                <div class="board-name">Ishaan Matta</div>
-            </div>
-            <div class="board-card">
-                <div class="board-committee">UNHRC</div>
-                <div class="board-position">Chairperson</div>
-                <div class="board-name">Prakrat Gupta</div>
-            </div>
-            <div class="board-card">
-                <div class="board-committee">UNHRC</div>
-                <div class="board-position">Co-Chairperson</div>
-                <div class="board-name">Vrinda Sharma</div>
-            </div>
-            <div class="board-card">
-                <div class="board-committee">UNHRC</div>
-                <div class="board-position">Rapporteur</div>
-                <div class="board-name">Anshika Aggarwal</div>
-            </div>
-            <div class="board-card">
-                <div class="board-committee">LOK SABHA</div>
-                <div class="board-position">Co-Moderator</div>
-                <div class="board-name">Jagrit Dubey</div>
-            </div>
-            <div class="board-card">
-                <div class="board-committee">LOK SABHA</div>
-                <div class="board-position">Co-Moderator</div>
-                <div class="board-name">Shubham Dubey</div>
-            </div>
-            <div class="board-card">
-                <div class="board-committee">LOK SABHA</div>
-                <div class="board-position">Scribe</div>
-                <div class="board-name">Anvi Gupta</div>
-            </div>
-            <div class="board-card">
-                <div class="board-committee">INTERNATIONAL PRESS</div>
-                <div class="board-position">Editor in Chief</div>
-                <div class="board-name">Reedim Gangwar</div>
-            </div>
-            <div class="board-card">
-                <div class="board-committee">INTERNATIONAL PRESS</div>
-                <div class="board-position">Photography Head</div>
-                <div class="board-name">Garv Wasson</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="awards-section" id="awards">
-        <h2 class="section-title">Roll of Honour</h2>
-        <div class="awards-grid">
-            <div class="award-committee">
-                <h3>UNGA-DISEC</h3>
-                <div class="award-item">
-                    <span class="award-category">Best Delegate</span>
-                    <span>Pakistan</span>
-                </div>
-                <div class="award-item">
-                    <span class="award-category">High Commendation</span>
-                    <span>USA</span>
-                </div>
-                <div class="award-item">
-                    <span class="award-category">Special Mention</span>
-                    <span>China</span>
-                </div>
-            </div>
-            <div class="award-committee">
-                <h3>UNHRC</h3>
-                <div class="award-item">
-                    <span class="award-category">Best Delegate</span>
-                    <span>Malta</span>
-                </div>
-                <div class="award-item">
-                    <span class="award-category">High Commendation</span>
-                    <span>Cambodia</span>
-                </div>
-                <div class="award-item">
-                    <span class="award-category">Special Mention</span>
-                    <span>Columbia</span>
-                </div>
-            </div>
-            <div class="award-committee">
-                <h3>LOK SABHA</h3>
-                <div class="award-item">
-                    <span class="award-category">Best Representative</span>
-                    <span>Sanvi Srijan</span>
-                </div>
-                <div class="award-item">
-                    <span class="award-category">High Commendation</span>
-                    <span>Dhritil Thapar</span>
-                </div>
-                <div class="award-item">
-                    <span class="award-category">Special Mention</span>
-                    <span>Aadhya Bansal</span>
-                </div>
-            </div>
-            <div class="award-committee">
-                <h3>INTERNATIONAL PRESS</h3>
-                <div class="award-item">
-                    <span class="award-category">Best Journalist</span>
-                    <span>Sharvi Chhabra</span>
-                </div>
-                <div class="award-item">
-                    <span class="award-category">Best Caricaturist</span>
-                    <span>Pratulya Devshi</span>
-                </div>
-                <div class="award-item">
-                    <span class="award-category">Best Photographer</span>
-                    <span>Sifat Kaur</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="timeline-section">
-        <h2 class="section-title">Conference Timeline</h2>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <h3>Day 1 - 8th October</h3>
-                    <p>Opening ceremony, committee sessions begin with agenda setting, moderated caucuses, and initial position statements from all delegations.</p>
-                </div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <h3>Day 2 - 9th October</h3>
-                    <p>Continued deliberations, working paper development, resolution drafting, voting procedures, and closing ceremony with award presentations.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="secretariat-section" id="secretariat">
-        <h2 class="section-title">Secretariat Team</h2>
-        <div class="secretariat-grid">
-            <div class="secretariat-card">Aarav Parashar</div>
-            <div class="secretariat-card">Smridhi Srivastava</div>
-            <div class="secretariat-card">Priyal Jain</div>
-            <div class="secretariat-card">Pranati Khattar</div>
-            <div class="secretariat-card">Sayma</div>
-            <div class="secretariat-card">Saanvi Sharma</div>
-            <div class="secretariat-card">Geet Khanna</div>
-            <div class="secretariat-card">Ayana Maheshwari</div>
-            <div class="secretariat-card">Dheirya Kharbanda</div>
-        </div>
-    </section>
-
-    <section class="interactive-section" id="interactive">
-        <h2 class="section-title">Interactive MUN Hub</h2>
-        <div class="interactive-grid">
-            <div class="interactive-card" id="quiz-card">
-                <h3>MUN Knowledge Quiz</h3>
-                <p>Test your Model UN knowledge with our interactive quiz featuring questions on procedures, history, and current affairs.</p>
-                <button class="cta-button" onclick="startQuiz()">Start Quiz</button>
-                <div id="quiz-container" style="display: none;">
-                    <div id="question"></div>
-                    <div id="options"></div>
-                    <button id="next-btn" onclick="nextQuestion()">Next</button>
-                    <div id="score"></div>
-                </div>
-            </div>
-            <div class="interactive-card" id="builder-card">
-                <h3>Resolution Builder</h3>
-                <p>Craft your own UN resolution with our guided tool. Learn the structure and create impactful diplomatic documents.</p>
-                <button class="cta-button" onclick="openBuilder()">Build Resolution</button>
-                <div id="builder-container" style="display: none;">
-                    <input type="text" id="res-title" placeholder="Resolution Title">
-                    <textarea id="preamble" placeholder="Preamble (e.g., Recalling, Noting, etc.)"></textarea>
-                    <textarea id="operative" placeholder="Operative Clauses (e.g., 1. Decides, 2. Requests, etc.)"></textarea>
-                    <button onclick="generateResolution()">Generate Resolution</button>
-                    <div id="resolution-output"></div>
-                </div>
-            </div>
-            <div class="interactive-card" id="badge-card">
-                <h3>Delegate Badge Creator</h3>
-                <p>Design your personalized delegate badge for the conference. Choose your country, committee, and style!</p>
-                <button class="cta-button" onclick="openBadgeCreator()">Create Badge</button>
-                <div id="badge-container" style="display: none;">
-                    <input type="text" id="delegate-name" placeholder="Your Name">
-                    <select id="country-select">
-                        <option>Select Country</option>
-                        <option>USA</option>
-                        <option>China</option>
-                        <option>Russia</option>
-                        <option>India</option>
-                        <option>France</option>
-                        <option>Germany</option>
-                    </select>
-                    <select id="committee-select">
-                        <option>Select Committee</option>
-                        <option>UNGA-DISEC</option>
-                        <option>UNHRC</option>
-                        <option>Lok Sabha</option>
-                        <option>International Press</option>
-                    </select>
-                    <button onclick="generateBadge()">Generate Badge</button>
-                    <canvas id="badge-canvas" width="300" height="400"></canvas>
-                </div>
-            </div>
-            <div class="interactive-card" id="simulator-card">
-                <h3>Debate Simulator</h3>
-                <p>Experience a virtual debate session. Choose your stance and engage in diplomatic discourse.</p>
-                <button class="cta-button" onclick="startSimulator()">Enter Simulator</button>
-                <div id="simulator-container" style="display: none;">
-                    <div id="debate-topic">Topic: Should AI be regulated internationally?</div>
-                    <div id="stance-options">
-                        <button onclick="chooseStance('for')">For</button>
-                        <button onclick="chooseStance('against')">Against</button>
-                    </div>
-                    <div id="debate-output"></div>
-                    <input type="text" id="user-argument" placeholder="Enter your argument">
-                    <button onclick="submitArgument()">Submit</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <h2>BBPS MUN 2025 - A Journey of Diplomacy & Leadership</h2>
-        <p>"Peace begins with us"</p>
-        <p style="margin-top: 2rem; opacity: 0.7;">Bal Bharati Public School, GRH Marg</p>
-        <p style="opacity: 0.7;">15th Edition | 8-9 October 2024</p>
-        <p style="margin-top: 1rem; opacity: 0.5; font-size: 0.9rem;">Made with love by Dheirya Kharbanda</p>
-    </footer>
-
-    <script>
-        const canvas = document.getElementById('globe-canvas');
-        const ctx = canvas.getContext('2d');
-        
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+  <script>
+    const reveals = document.querySelectorAll('.vision-quote, .vision-attr');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
         }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        let particles = [];
-        for (let i = 0; i < 100; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                size: Math.random() * 2 + 1
-            });
-        }
-
-        let rotation = 0;
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            rotation += 0.005;
-            
-            // Draw globe
-            let centerX = canvas.width / 2;
-            let centerY = canvas.height / 2;
-            let radius = Math.min(canvas.width, canvas.height) / 4;
-            
-            // Globe background with 3D effect
-            ctx.save();
-            ctx.translate(centerX, centerY);
-            ctx.rotate(rotation);
-            
-            // Create gradient for 3D effect
-            let gradient = ctx.createRadialGradient(0, -radius/2, 0, 0, 0, radius);
-            gradient.addColorStop(0, 'rgba(74, 144, 226, 0.8)');
-            gradient.addColorStop(0.7, 'rgba(74, 144, 226, 0.3)');
-            gradient.addColorStop(1, 'rgba(0, 31, 63, 0.1)');
-            
-            ctx.beginPath();
-            ctx.arc(0, 0, radius, 0, Math.PI * 2);
-            ctx.fillStyle = gradient;
-            ctx.fill();
-            
-            // Add shadow for 3D effect
-            ctx.beginPath();
-            ctx.arc(0, radius/3, radius * 0.8, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-            ctx.fill();
-            
-            // Continents (simplified, rotating with globe)
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-            // North America
-            ctx.beginPath();
-            ctx.arc(-radius * 0.3, -radius * 0.2, radius * 0.15, 0, Math.PI * 2);
-            ctx.fill();
-            // Europe
-            ctx.beginPath();
-            ctx.arc(radius * 0.1, -radius * 0.3, radius * 0.1, 0, Math.PI * 2);
-            ctx.fill();
-            // Asia
-            ctx.beginPath();
-            ctx.arc(radius * 0.4, -radius * 0.1, radius * 0.2, 0, Math.PI * 2);
-            ctx.fill();
-            // Africa
-            ctx.beginPath();
-            ctx.arc(radius * 0.1, radius * 0.2, radius * 0.12, 0, Math.PI * 2);
-            ctx.fill();
-            // South America
-            ctx.beginPath();
-            ctx.arc(-radius * 0.2, radius * 0.3, radius * 0.1, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.restore();
-            
-            // 3D Particles orbiting the globe
-            particles.forEach((p, index) => {
-                // Calculate 3D position
-                let angle = (index / particles.length) * Math.PI * 2 + rotation * 2;
-                let distance = radius + 50 + Math.sin(Date.now() * 0.001 + index) * 20;
-                let height = Math.cos(Date.now() * 0.002 + index) * 30;
-                
-                // Project 3D to 2D
-                let x = centerX + Math.cos(angle) * distance;
-                let y = centerY + Math.sin(angle) * distance + height;
-                
-                // Size based on distance (perspective)
-                let size = p.size * (1 - Math.abs(height) / 50);
-                
-                ctx.beginPath();
-                ctx.arc(x, y, Math.max(size, 0.5), 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(74, 144, 226, ${0.3 + Math.sin(Date.now() * 0.003 + index) * 0.2})`;
-                ctx.fill();
-                
-                // Add glow effect
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = 'rgba(74, 144, 226, 0.5)';
-                ctx.fill();
-                ctx.shadowBlur = 0;
-            });
-            
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // Counter animation
-        const counters = document.querySelectorAll('.stat-number');
-        const speed = 200;
-
-        const animateCounter = (counter) => {
-            const target = +counter.getAttribute('data-target');
-            const count = +counter.innerText;
-            const inc = target / speed;
-
-            if (count < target) {
-                counter.innerText = Math.ceil(count + inc);
-                setTimeout(() => animateCounter(counter), 1);
-            } else {
-                counter.innerText = target;
-            }
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounter(entry.target);
-                }
-            });
-        });
-
-        counters.forEach(counter => observer.observe(counter));
-
-        // Interactive Features
-        let quizQuestions = [
-            {
-                question: "What does UNGA stand for?",
-                options: ["United Nations General Assembly", "United Nations Global Alliance", "United Nations Governance Act", "United Nations Global Assembly"],
-                answer: 0
-            },
-            {
-                question: "What is the primary function of the UN Security Council?",
-                options: ["Economic development", "Maintaining international peace and security", "Human rights monitoring", "Environmental protection"],
-                answer: 1
-            },
-            {
-                question: "What does 'veto power' mean in the UN context?",
-                options: ["The ability to propose resolutions", "The ability to block resolutions", "The ability to amend resolutions", "The ability to vote on resolutions"],
-                answer: 1
-            }
-        ];
-
-        let currentQuestion = 0;
-        let score = 0;
-
-        function startQuiz() {
-            document.getElementById('quiz-container').style.display = 'block';
-            currentQuestion = 0;
-            score = 0;
-            showQuestion();
-        }
-
-        function showQuestion() {
-            if (currentQuestion < quizQuestions.length) {
-                let q = quizQuestions[currentQuestion];
-                document.getElementById('question').innerHTML = `<h4>${q.question}</h4>`;
-                let optionsHtml = '';
-                q.options.forEach((option, index) => {
-                    optionsHtml += `<button onclick="checkAnswer(${index})">${option}</button>`;
-                });
-                document.getElementById('options').innerHTML = optionsHtml;
-                document.getElementById('next-btn').style.display = 'none';
-            } else {
-                document.getElementById('question').innerHTML = `<h4>Quiz Complete! Your score: ${score}/${quizQuestions.length}</h4>`;
-                document.getElementById('options').innerHTML = '';
-                document.getElementById('next-btn').style.display = 'none';
-            }
-        }
-
-        function checkAnswer(selected) {
-            if (selected === quizQuestions[currentQuestion].answer) {
-                score++;
-                alert('Correct!');
-            } else {
-                alert('Incorrect. The correct answer is: ' + quizQuestions[currentQuestion].options[quizQuestions[currentQuestion].answer]);
-            }
-            document.getElementById('next-btn').style.display = 'block';
-        }
-
-        function nextQuestion() {
-            currentQuestion++;
-            showQuestion();
-        }
-
-        function openBuilder() {
-            document.getElementById('builder-container').style.display = 'block';
-        }
-
-        function generateResolution() {
-            let title = document.getElementById('res-title').value;
-            let preamble = document.getElementById('preamble').value;
-            let operative = document.getElementById('operative').value;
-            let resolution = `UNITED NATIONS\n\n${title}\n\nPREAMBLE\n${preamble}\n\nOPERATIVE CLAUSES\n${operative}`;
-            document.getElementById('resolution-output').innerText = resolution;
-        }
-
-        function openBadgeCreator() {
-            document.getElementById('badge-container').style.display = 'block';
-        }
-
-        function generateBadge() {
-            let name = document.getElementById('delegate-name').value;
-            let country = document.getElementById('country-select').value;
-            let committee = document.getElementById('committee-select').value;
-            let canvas = document.getElementById('badge-canvas');
-            let ctx = canvas.getContext('2d');
-            
-            // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Background
-            ctx.fillStyle = '#001f3f';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Border
-            ctx.strokeStyle = '#4a90e2';
-            ctx.lineWidth = 5;
-            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
-            
-            // Text
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '20px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('BBPS MUN 2025', canvas.width / 2, 50);
-            ctx.fillText('Delegate Badge', canvas.width / 2, 80);
-            ctx.fillText(`Name: ${name}`, canvas.width / 2, 120);
-            ctx.fillText(`Country: ${country}`, canvas.width / 2, 150);
-            ctx.fillText(`Committee: ${committee}`, canvas.width / 2, 180);
-        }
-
-        function startSimulator() {
-            document.getElementById('simulator-container').style.display = 'block';
-        }
-
-        function chooseStance(stance) {
-            document.getElementById('debate-output').innerText = `You chose to argue ${stance} the topic. Prepare your opening statement!`;
-        }
-
-        function submitArgument() {
-            let argument = document.getElementById('user-argument').value;
-            document.getElementById('debate-output').innerText += `\n\nYour argument: ${argument}\n\nChair: Thank you for your contribution. The debate continues...`;
-            document.getElementById('user-argument').value = '';
-        }
-    </script>
+      });
+    }, { threshold: 0.2 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
